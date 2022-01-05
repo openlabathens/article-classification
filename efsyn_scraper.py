@@ -80,7 +80,7 @@ articles_list = {'Article': article_results, 'Title':title_results, 'Date': date
 articles_df = pd.DataFrame(data=articles_list)
 cols = ['Article', 'Title', 'Date']
 articles_df = articles_df[cols]
-articles_df.to_csv(r'data/articles_df.csv', index=False)
+articles_df.to_csv(r'data/efsyn_articles_df.csv', index=False)
 
 
 # A couple of development sanity checks:
