@@ -2,11 +2,15 @@ from bs4 import BeautifulSoup
 import urllib.request
 from urllib.parse import quote
 
+import pandas as pd
+import numpy as np
+
 # List with queries I want to make
 desired_queries = ['γυναικοκτονία']
 # , 'δολοφονία', 'σύζυγος']
 
-results = []
+link_results = []
+article_results = []
 page = 0
 
 for query in desired_queries:
@@ -25,10 +29,10 @@ for query in desired_queries:
         # Parsing response
         soup = BeautifulSoup(html, 'html.parser')
         
-        # Extracting number of results
+        # Extracting number of link_results
         search = soup.find_all('div', attrs={'class':'default-teaser triple'})
         
-        # Search for articles within given div:
+        # Search for articles within given tag:
         for s in  search:
             articles = soup.find_all('article', attrs={'class': 'default-teaser__article default-teaser__article'})
             
@@ -36,21 +40,12 @@ for query in desired_queries:
             for a in articles:
                 links = "https://www.efsyn.gr" + a.contents[9].get('href')
                 # print(links)  
-                results.append(links)
+                link_results.append(links)
 
-print(results)
-print(len(results))
-
-# check if results are unique:
-if len(results) > len(set(results)):
-   print("not unique")
-else:
-    print("unique")
-
-for i in range(len(results)):
-    # print(results[i])
-    # TODO: take each link from results and parse it to get the raw text.
-    url = results[i]
+for i in range(len(link_results)):
+    # print(link_results[i])
+    # TODO: take each link from link_results and parse it to get the raw text.
+    url = link_results[i]
     
     # To avoid 403-error using User-Agent
     req = urllib.request.Request(url, headers={'User-Agent' : "Magic Browser"})
@@ -61,8 +56,22 @@ for i in range(len(results)):
     # Parsing response
     soup = BeautifulSoup(html, 'html.parser')
 
+    # Get article body
     body = soup.find('div', attrs={'class':'article__body'})
     
+    
+
     for i in body:
         # TODO: add articles to pandas dataframe
         print(i.text)
+        article_results.append(i.text)
+
+# A couple of development sanity checks:
+print(link_results)
+print(len(link_results))
+
+# Check if link_results are unique:
+if len(link_results) > len(set(link_results)):
+   print("not unique")
+else:
+    print("unique") 
