@@ -40,3 +40,10 @@ for query in desired_queries:
 
 print(results)
 print(len(results))
+
+# check if results are unique:
+if len(results) > len(set(results)):
+   print("not unique")
+else:
+    print("unique")
+
