@@ -14,10 +14,12 @@ link_results = []
 article_results = []
 page = 0
 
+# Scrape for links in website database given the queries
 for query in desired_queries:
     for i in range(3):
         # 99):
         page = page+i
+        
         # Constracting http query
         url = 'https://www.efsyn.gr/search?keywords=' + quote(query) + '&page=' + str(page)
             
@@ -25,27 +27,29 @@ for query in desired_queries:
         req = urllib.request.Request(url, headers={'User-Agent' : "Magic Browser"})
         response = urllib.request.urlopen( req )
         
-        html = response.read()
-        
-        # Parsing response
-        soup = BeautifulSoup(html, 'html.parser')
-        
-        # Extracting number of link_results
-        search = soup.find_all('div', attrs={'class':'default-teaser triple'})
-        
-        # Search for articles within given tag:
-        for s in  search:
-            articles = soup.find_all('article', attrs={'class': 'default-teaser__article default-teaser__article'})
+        # Check page accessibility
+        if response.status_code == 200:
             
-            # Extract the link of each article:
-            for a in articles:
-                links = "https://www.efsyn.gr" + a.contents[9].get('href')
-                # print(links)  
-                link_results.append(links)
+            html = response.read()
+            
+            # Parsing response
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            # Extracting number of link_results
+            search = soup.find_all('div', attrs={'class':'default-teaser triple'})
+            
+            # Search for articles within given tag:
+            for s in  search:
+                articles = soup.find_all('article', attrs={'class': 'default-teaser__article default-teaser__article'})
+                
+                # Extract the link of each article:
+                for a in articles:
+                    links = "https://www.efsyn.gr" + a.contents[9].get('href')
+                    # print(links)  
+                    link_results.append(links)
 
+# Scrape inside individual search results
 for i in range(len(link_results)):
-    # print(link_results[i])
-    # TODO: take each link from link_results and parse it to get the raw text.
     url = link_results[i]
     
     # To avoid 403-error using User-Agent
@@ -67,7 +71,7 @@ for i in range(len(link_results)):
 # Add articles to pandas dataframe
 data = {'Article': article_results, 'Date': datetime.now()}
 dataset = pd.DataFrame(data=data)
-cols = ['Article']
+cols = ['Article', 'Date']
 dataset = dataset[cols]
 
 # A couple of development sanity checks:
