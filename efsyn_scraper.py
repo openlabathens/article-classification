@@ -47,3 +47,22 @@ if len(results) > len(set(results)):
 else:
     print("unique")
 
+for i in range(len(results)):
+    # print(results[i])
+    # TODO: take each link from results and parse it to get the raw text.
+    url = results[i]
+    
+    # To avoid 403-error using User-Agent
+    req = urllib.request.Request(url, headers={'User-Agent' : "Magic Browser"})
+    response = urllib.request.urlopen( req )
+    
+    html = response.read()
+    
+    # Parsing response
+    soup = BeautifulSoup(html, 'html.parser')
+
+    body = soup.find('div', attrs={'class':'article__body'})
+    
+    for i in body:
+        # TODO: add articles to pandas dataframe
+        print(i.text)
