@@ -1,3 +1,4 @@
+from datetime import datetime
 from bs4 import BeautifulSoup
 import urllib.request
 from urllib.parse import quote
@@ -59,12 +60,15 @@ for i in range(len(link_results)):
     # Get article body
     body = soup.find('div', attrs={'class':'article__body'})
     
-    
-
     for i in body:
-        # TODO: add articles to pandas dataframe
-        print(i.text)
         article_results.append(i.text)
+
+
+# Add articles to pandas dataframe
+data = {'Article': article_results, 'Date': datetime.now()}
+dataset = pd.DataFrame(data=data)
+cols = ['Article']
+dataset = dataset[cols]
 
 # A couple of development sanity checks:
 print(link_results)
@@ -75,3 +79,5 @@ if len(link_results) > len(set(link_results)):
    print("not unique")
 else:
     print("unique") 
+
+print(dataset)
