@@ -8,10 +8,11 @@ import numpy as np
 
 # List with queries I want to make
 desired_queries = ['γυναικοκτονία']
-# , 'δολοφονία', 'σύζυγος']
+# , 'δολοφονία']
 
 link_results = []
 article_results = []
+title_results = []
 
 page = 0
 
@@ -70,10 +71,14 @@ for i in range(len(link_results)):
         
     article_results.append(complete_article)
 
-# Add articles to pandas dataframe
-articles_list = {'Article': article_results, 'Date': datetime.now()}
+    # Get article title
+    article_title = soup.find('section', attrs={'class':'article__main'}).find('h1', recursive=False)
+    title_results.append(article_title.text)
+
+# Add articles and titles to pandas dataframe
+articles_list = {'Article': article_results, 'Title':title_results, 'Date': datetime.now()}
 articles_df = pd.DataFrame(data=articles_list)
-cols = ['Article', 'Date']
+cols = ['Article', 'Title', 'Date']
 articles_df = articles_df[cols]
 articles_df.to_csv(r'data/articles_df.csv', index=False)
 
