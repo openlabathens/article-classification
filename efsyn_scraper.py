@@ -12,6 +12,7 @@ desired_queries = ['γυναικοκτονία']
 
 link_results = []
 article_results = []
+
 page = 0
 
 # Scrape for links in website database given the queries
@@ -26,27 +27,24 @@ for query in desired_queries:
         # To avoid 403-error using User-Agent
         req = urllib.request.Request(url, headers={'User-Agent' : "Magic Browser"})
         response = urllib.request.urlopen( req )
+                    
+        html = response.read()
         
-        # Check page accessibility
-        if response.status_code == 200:
+        # Parsing response
+        soup = BeautifulSoup(html, 'html.parser')
+        
+        # Extracting number of link_results
+        search = soup.find_all('div', attrs={'class':'default-teaser triple'})
+        
+        # Search for articles within given tag:
+        for s in  search:
+            articles = soup.find_all('article', attrs={'class': 'default-teaser__article default-teaser__article'})
             
-            html = response.read()
-            
-            # Parsing response
-            soup = BeautifulSoup(html, 'html.parser')
-            
-            # Extracting number of link_results
-            search = soup.find_all('div', attrs={'class':'default-teaser triple'})
-            
-            # Search for articles within given tag:
-            for s in  search:
-                articles = soup.find_all('article', attrs={'class': 'default-teaser__article default-teaser__article'})
-                
-                # Extract the link of each article:
-                for a in articles:
-                    links = "https://www.efsyn.gr" + a.contents[9].get('href')
-                    # print(links)  
-                    link_results.append(links)
+            # Extract the link of each article:
+            for a in articles:
+                links = "https://www.efsyn.gr" + a.contents[9].get('href')
+                # print(links)  
+                link_results.append(links)
 
 # Scrape inside individual search results
 for i in range(len(link_results)):
@@ -61,18 +59,24 @@ for i in range(len(link_results)):
     # Parsing response
     soup = BeautifulSoup(html, 'html.parser')
 
-    # Get article body
-    body = soup.find('div', attrs={'class':'article__body'})
+    # Get article body and individual paragraphs within
+    article_body = soup.find('div', attrs={'class':'article__body'}).findAll('p', recursive=False)
     
-    for i in body:
-        article_results.append(i.text)
+    list_paragraphs = []
+    for paragraph in article_body:
 
+        list_paragraphs.append(paragraph.text)
+        complete_article = " ".join(list_paragraphs)
+        
+    article_results.append(complete_article)
 
 # Add articles to pandas dataframe
-data = {'Article': article_results, 'Date': datetime.now()}
-dataset = pd.DataFrame(data=data)
+articles_list = {'Article': article_results, 'Date': datetime.now()}
+articles_df = pd.DataFrame(data=articles_list)
 cols = ['Article', 'Date']
-dataset = dataset[cols]
+articles_df = articles_df[cols]
+articles_df.to_csv(r'data/articles_df.csv', index=False)
+
 
 # A couple of development sanity checks:
 print(link_results)
@@ -84,4 +88,4 @@ if len(link_results) > len(set(link_results)):
 else:
     print("unique") 
 
-print(dataset)
+print(articles_df)
