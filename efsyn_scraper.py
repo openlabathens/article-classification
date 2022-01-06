@@ -4,7 +4,6 @@ import urllib.request
 from urllib.parse import quote
 
 import pandas as pd
-import numpy as np
 
 # List with queries
 desired_queries = ['γυναικοκτονία', 'δολοφονία']
