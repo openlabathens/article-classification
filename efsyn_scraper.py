@@ -6,8 +6,9 @@ from urllib.parse import quote
 import pandas as pd
 import numpy as np
 
-# List with queries I want to make
-desired_queries = ['γυναικοκτονία']
+# List with queries
+desired_queries = ['γυναικοκτονία', 'δολοφονία']
+
 # , 'δολοφονία']
 
 link_results = []
@@ -15,14 +16,13 @@ article_results = []
 title_results = []
 
 page = 0
-
 # Scrape for links in website database given the queries
 for query in desired_queries:
-    for i in range(3):
-        # 99):
+    # Scraπe n pages
+    for i in range(8):
         page = page+i
         
-        # Constracting http query
+        # Make the http query
         url = 'https://www.efsyn.gr/search?keywords=' + quote(query) + '&page=' + str(page)
             
         # To avoid 403-error using User-Agent
@@ -69,14 +69,18 @@ for i in range(len(link_results)):
         list_paragraphs.append(paragraph.text)
         complete_article = " ".join(list_paragraphs)
         
-    article_results.append(complete_article)
-
+    article_results.append(complete_article)    
+    
     # Get article title
-    article_title = soup.find('section', attrs={'class':'article__main'}).find('h1', recursive=False)
-    title_results.append(article_title.text)
-
+    try:
+        article_title = soup.find('section', attrs={'class':'article__main'}).find('h1', recursive=False)
+        title_results.append(article_title.text)
+    except:
+        article_title = 'N/A'
+        title_results.append(article_title)
+    
 # Add articles and titles to pandas dataframe
-articles_list = {'Article': article_results, 'Title':title_results, 'Date': datetime.now()}
+articles_list = {'Article': article_results, 'Title': title_results, 'Date': datetime.now()}
 articles_df = pd.DataFrame(data=articles_list)
 cols = ['Article', 'Title', 'Date']
 articles_df = articles_df[cols]
