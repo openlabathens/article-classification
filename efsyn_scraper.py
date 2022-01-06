@@ -84,6 +84,10 @@ articles_list = {'Article': article_results, 'Title': title_results, 'Date': dat
 articles_df = pd.DataFrame(data=articles_list)
 cols = ['Article', 'Title', 'Date']
 articles_df = articles_df[cols]
+# Check for duplicates in df:
+# articles_df = articles_df[articles_df.duplicated()]
+# Drop duplicates in df:
+articles_df = articles_df.drop_duplicates()
 articles_df.to_csv(r'data/efsyn_articles_df.csv', index=False)
 
 
