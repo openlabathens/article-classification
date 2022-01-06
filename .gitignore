@@ -128,5 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Chrome Web Driver for selenium
-chromedriver
+# Mac OS things
+.DS_Store
