@@ -22,7 +22,7 @@ def create_soup_from_url (url):
 def main():
 
     # List with queries
-    desired_queries = ['γυναικοκτονία', 'δολοφονία']
+    desired_queries = ['γυναικοκτονία', 'ανθρωποκτονία']
 
     link_results = []
     article_results = []

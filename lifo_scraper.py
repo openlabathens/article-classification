@@ -23,7 +23,7 @@ def main():
     
     # List with queries
     desired_queries = ['γυναικοκτονία']
-# , 'δολοφονία']
+# , 'ανθρωποκτονία']
 
     link_results = []
     article_results = []
