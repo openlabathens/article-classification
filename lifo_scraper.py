@@ -87,7 +87,7 @@ def main():
     # articles_df = articles_df[articles_df.duplicated()]
     # Drop duplicates in df:
     articles_df = articles_df.drop_duplicates()
-    articles_df.to_csv(r'data/test_lifo_articles_txt.', index=False, sep=' ', header=False)
+    articles_df.to_csv(r'data/test_lifo_articles.txt', index=False, sep=' ', header=False)
 
 
     # A couple of development sanity checks:
