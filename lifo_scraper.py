@@ -6,8 +6,9 @@ from urllib.parse import quote
 import pandas as pd
 
 
-
+# Make an http query from url and create soup to parse
 def create_soup_from_url (url):
+    
     # To avoid 403-error using User-Agent
     req = urllib.request.Request(url, headers={'User-Agent' : "Magic Browser"})
     response = urllib.request.urlopen( req )
@@ -22,8 +23,7 @@ def create_soup_from_url (url):
 def main():
     
     # List with queries
-    desired_queries = ['γυναικοκτονία']
-# , 'ανθρωποκτονία']
+    desired_queries = ['γυναικοκτονία', 'ανθρωποκτονία']
 
     link_results = []
     article_results = []
@@ -33,7 +33,7 @@ def main():
     # Scrape for links in website database given the queries
     for query in desired_queries:
         # Scraπe n pages
-        for i in range(1):
+        for i in range(8):
             page = page+i
             
             soup = create_soup_from_url(url='https://www.lifo.gr/search?keyword=' + quote(query) + '&page=' + str(page))
