@@ -82,7 +82,7 @@ def main():
     # articles_df = articles_df[articles_df.duplicated()]
     # Drop duplicates in df:
     articles_df = articles_df.drop_duplicates()
-    articles_df.to_csv(r'data/efsyn_articles_df.csv', index=False)
+    articles_df.to_csv(r'data/test_efsyn_articles_txt.', index=False, sep=' ', header=False)
 
 
     # A couple of development sanity checks:
