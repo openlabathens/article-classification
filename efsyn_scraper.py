@@ -79,9 +79,9 @@ for i in range(len(link_results)):
         title_results.append(article_title)
     
 # Add articles and titles to pandas dataframe
-articles_list = {'Article': article_results, 'Title': title_results, 'Date': datetime.now()}
+articles_list = {'Article': article_results, 'Title': title_results, 'Date Scraped': datetime.now()}
 articles_df = pd.DataFrame(data=articles_list)
-cols = ['Article', 'Title', 'Date']
+cols = ['Article', 'Title', 'Date Scraped']
 articles_df = articles_df[cols]
 # Check for duplicates in df:
 # articles_df = articles_df[articles_df.duplicated()]
