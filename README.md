@@ -14,4 +14,9 @@ This project was inspired by:
 > D’Ignazio, Catherine, et al. Feminicide & Machine Learning : Detecting Gender-Based Violence to Strengthen Civil Sector Activism. 2020, http://www.kanarinka.com/wp-content/uploads/2021/01/DIgnazio-et-al.-2020-Feminicide-Machine-Learning-Detecting-Gender-ba.pdf.
 
 ## Project set up:
-Info on how to create `requirements.txt` from jupyter-notebooks found [here](https://towardsdatascience.com/generating-a-requirements-file-jupyter-notebook-385f1c315b52).
+
+`cd` yourself to the reqs folder and then run `pip install requirements.txt`. 
+
+This should help you install all the available dependencies for this project. 
+
+Info on how to create `requirements.txt` for a jupyter-notebook found [here](https://towardsdatascience.com/generating-a-requirements-file-jupyter-notebook-385f1c315b52).
