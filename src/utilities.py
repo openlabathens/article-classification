@@ -1,4 +1,6 @@
 import spacy
+
+import nltk
 from nltk.corpus import stopwords
 # Need to uncomment the following line in order to download nltk stopwords:
 # nltk.download('stopwords')
@@ -72,6 +74,7 @@ def lemmatize(text):
 
 
 def process(text, pipeline):
+    """Custom function to process a pipeline on text"""
     tokens = text
     for transform in pipeline:
         tokens = transform(tokens)
@@ -90,6 +93,22 @@ def import_additional_greek_stopwords(STOPWORDS_GREEK):
 def remove_stopwords(text):
     """Custom function to remove the stopwords"""
     return " ".join([word for word in str(text).split() if not word in STOPWORDS_GREEK])
+
+def remove_intonation(text):
+    """Custom function to remove word-intonation"""
+    rep = {"ά": "α", "έ": "ε", "ή": "η", "ί": "ι", "ό": "ο", "ύ": "υ", "ώ": "ω", "ϊ": "ι",
+           "ἀ": "α", "ἐ": "ε", "ἤ": "η", "ἰ": "ι", "ἄ": "α", "ὐ": "υ", "ὡ": "ω", "ὦ": "ω",
+           'ὖ': 'υ', 'ὅ': 'ο', 'ῆ': 'η', 'ῇ': 'η', 'ῦ': 'υ', 'ὁ': 'ο', 'ὑ': 'υ', 'ὲ': 'ε',
+           'ὺ': 'υ', 'ἂ': 'α', 'ἵ': 'ι', 'ὴ': 'η', 'ὰ': 'α', 'ἅ': 'α', 'ὶ': 'ι', 'ἴ': 'ι',
+           'ὸ': 'ο', 'ἥ': 'η', 'ἡ': 'η', 'ὕ': 'υ', 'ἔ': 'ε', 'ἳ': 'ι', 'ὗ': 'υ', 'ἃ': 'α',
+           'ὃ': 'ο', 'ὥ': 'ω', 'ὔ': 'υ', 'ῖ': 'ι', 'ἣ': 'η', 'ἷ': 'ι', 'ἑ': 'ε', 'ᾧ': 'ω',
+           'ἢ': 'η', 'ΐ': 'ι', }
+
+    rep = dict((nltk.re.escape(k), v) for k, v in rep.items())
+    pattern = nltk.re.compile("|".join(rep.keys()))
+    text = pattern.sub(lambda m: rep[nltk.re.escape(m.group(0))], text)
+
+    return text
 
 
 ################### NLP ###################
