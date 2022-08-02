@@ -32,6 +32,10 @@ def import_dataset(encoding=None):
 # Load greek language model from spacy:
 nlp = spacy.load("el_core_news_md")
 
+# Variable used to remove greek stopwords:
+stopwords_lower = list(map(lambda x: x.lower(), stopwords.words('greek')))
+STOPWORDS_GREEK = set(stopwords_lower)
+
 
 def remove_punctuation(text):
     """Custom function to remove the punctuation"""
@@ -62,7 +66,7 @@ def drop_numbers(text):
 
 
 def lemmatize(text):
-    """custom function to lemmatize text"""
+    """Custom function to lemmatize text"""
     doc = nlp(' '.join(text))
     return [token.lemma_ for token in doc]
 
@@ -72,6 +76,21 @@ def process(text, pipeline):
     for transform in pipeline:
         tokens = transform(tokens)
     return tokens
+
+
+def import_additional_greek_stopwords(STOPWORDS_GREEK):
+    """Helper function used add more stopwords to NLTK stopwords list"""
+    additional_stopwords = open('data/additional_stopwords.txt', 'r')
+    for line in additional_stopwords:
+        words = line.strip()
+        STOPWORDS_GREEK.add(words)
+    return STOPWORDS_GREEK
+
+
+def remove_stopwords(text):
+    """Custom function to remove the stopwords"""
+    return " ".join([word for word in str(text).split() if not word in STOPWORDS_GREEK])
+
 
 ################### NLP ###################
 
