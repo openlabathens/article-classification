@@ -245,3 +245,8 @@ def wordcloud_clusters(model, vectors, features, no_top_words=40):
         plt.figure(figsize=(12, 12))
         plt.imshow(wc, interpolation='bilinear')
         plt.axis("off")
+
+def add_labels(x, y):
+    """Utility function to add labels on plots"""
+    for i in range(len(x)):
+        plt.text(i, y[i], "%.2f" % round(y[i], 2) + "%", ha='center')
