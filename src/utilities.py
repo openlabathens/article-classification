@@ -19,8 +19,11 @@ import glob
 
 from collections import Counter
 
+
 def import_dataset(encoding=None):
-    """Imports dataset in csv format"""
+    """
+    Imports dataset in csv format
+    """
     file = glob.glob('data/data_set.csv')
     file = ' '.join(file)
     with open(file, encoding='utf-8') as inputfile:
@@ -43,20 +46,26 @@ CHAR_TO_REMOVE = 'ς'
 
 
 def remove_punctuation(text):
-    """Custom function to remove the punctuation. Returns a string."""
+    """
+    Custom function to remove the punctuation. Returns a string.
+    """
     PUNCTUATION_TO_REMOVE = '–«!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~»●·’“”'
     return text.translate(str.maketrans('', '', PUNCTUATION_TO_REMOVE))
 
 
 def tokenize_regex(text):
-    """The following expression matches tokens consisting of at least one letter (\p{L}), 
+    """
+    The following expression matches tokens consisting of at least one letter (\p{L}), 
     preceded and followed by an arbitrary sequence of alphanumeric characters 
-    (\w includes digits, letters, and underscore) and hyphens (-). Returns a string."""
+    (\w includes digits, letters, and underscore) and hyphens (-). Returns a string.
+    """
     return re.findall(r'[\w-]*\p{L}[\w-]*', text)
 
 
 def tokenize(text):
-    """Use spacy's tokenizer. Returns a string."""
+    """
+    Use SpaCy's tokenizer. Returns a string.
+    """
     doc = nlp.tokenizer(' '.join(text))
     return ' .'.join([token.text for token in doc])
 
@@ -66,19 +75,25 @@ def drop_single_letter_words(text):
 
 
 def drop_numbers(text):
-    """Custom function to remove numbers. Returns a string."""
+    """
+    Custom function to remove numbers. Returns a string.
+    """
     text_wo_numbers = re.sub(r'[0-9]+', '', text)
     return text_wo_numbers
 
 
 def lemmatize(text):
-    """Custom function to lemmatize text. Returns a list with lemmas."""
+    """
+    Custom function to lemmatize text. Returns a list with lemmas.
+    """
     doc = nlp(' '.join(text))
     return [token.lemma_ for token in doc]
 
 
 def process(text, pipeline):
-    """Custom function to process a pipeline on text."""
+    """
+    Custom function to process a pipeline on text.
+    """
     tokens = text
     for transform in pipeline:
         tokens = transform(tokens)
@@ -86,7 +101,9 @@ def process(text, pipeline):
 
 
 def import_additional_greek_stopwords(STOPWORDS_GREEK):
-    """Helper function used add more stopwords to NLTK stopwords list."""
+    """
+    Helper function used add more stopwords to NLTK stopwords list.
+    """
     additional_stopwords = open('data/additional_stopwords.txt', 'r')
     for line in additional_stopwords:
         words = line.strip()
@@ -95,11 +112,16 @@ def import_additional_greek_stopwords(STOPWORDS_GREEK):
 
 
 def remove_stopwords(text):
-    """Custom function to remove the stopwords. Returns a string"""
+    """
+    Custom function to remove the stopwords. Returns a string
+    """
     return ' '.join([word for word in str(text).split() if not word in STOPWORDS_GREEK])
 
+
 def remove_intonation(text):
-    """Custom function to remove word-intonation"""
+    """
+    Custom function to remove word-intonation.
+    """
     rep = {"ά": "α", "έ": "ε", "ή": "η", "ί": "ι", "ό": "ο", "ύ": "υ", "ώ": "ω", "ϊ": "ι",
            "ἀ": "α", "ἐ": "ε", "ἤ": "η", "ἰ": "ι", "ἄ": "α", "ὐ": "υ", "ὡ": "ω", "ὦ": "ω",
            'ὖ': 'υ', 'ὅ': 'ο', 'ῆ': 'η', 'ῇ': 'η', 'ῦ': 'υ', 'ὁ': 'ο', 'ὑ': 'υ', 'ὲ': 'ε',
@@ -114,8 +136,11 @@ def remove_intonation(text):
 
     return text
 
+
 def remove_final_s(text):
-    """Helper function which removes final s characters. Returns a string."""
+    """
+    Helper function which removes final s characters. Returns a string.
+    """
     return re.sub('ς', '', text)
 
 ################### NLP ###################
@@ -174,13 +199,17 @@ def kwic(doc_series, keyword, window=100, print_samples=5):
 
 
 def sort_coo(coo_matrix):
-    """Sorts the values in the vector while preserving the column index"""
+    """
+    Sorts the values in the vector while preserving the column index.
+    """
     tuples = zip(coo_matrix.col, coo_matrix.data)
     return sorted(tuples, key=lambda x: (x[1], x[0]), reverse=True)
 
 
 def extract_top_n_from_vector(feature_names, sorted_items, topn=10):
-    """Get the feature names and tf-idf score of top n items"""
+    """
+    Get the feature names and tf-idf score of top n items.
+    """
     # Use only topn items from vector
     sorted_items = sorted_items[:topn]
 
@@ -206,7 +235,9 @@ def extract_top_n_from_vector(feature_names, sorted_items, topn=10):
 
 
 def display_topics(model, features, num_top_words=5):
-    """Utility function to display topics produced by Topic Modelling"""
+    """
+    Utility function to display topics produced by Topic Modelling.
+    """
     for topic, word_vector in enumerate(model.components_):
         total = word_vector.sum()
         largest = word_vector.argsort()[::-1]  # inverts sort order
@@ -217,7 +248,9 @@ def display_topics(model, features, num_top_words=5):
 
 
 def wordcloud_topics(model, features, no_top_words=40):
-    """Utility function to produce wordclouds from Topic Modelling algorithms"""
+    """
+    Utility function to produce wordclouds from Topic Modelling algorithms.
+    """
     for topics, words in enumerate(model.components_):
         size = {}
         largest = words.argsort()[::-1]  # inverts order
@@ -232,7 +265,9 @@ def wordcloud_topics(model, features, no_top_words=40):
 
 
 def wordcloud_clusters(model, vectors, features, no_top_words=40):
-    """Utility function to visualise wordclouds for Kmeans topic modelling"""
+    """
+    Utility function to visualise wordclouds for Kmeans topic modelling.
+    """
     for cluster in np.unique(model.labels_):
         size = {}
         words = vectors[model.labels_ == cluster].sum(axis=0).A[0]
@@ -246,7 +281,10 @@ def wordcloud_clusters(model, vectors, features, no_top_words=40):
         plt.imshow(wc, interpolation='bilinear')
         plt.axis("off")
 
+
 def add_labels(x, y):
-    """Utility function to add labels on plots"""
+    """
+    Utility function to add labels on plots.
+    """
     for i in range(len(x)):
         plt.text(i, y[i], "%.2f" % round(y[i], 2) + "%", ha='center')
