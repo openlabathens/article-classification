@@ -34,13 +34,16 @@ def import_dataset(encoding=None):
 # Load greek language model from spacy:
 nlp = spacy.load("el_core_news_md")
 
-# Variable used to remove greek stopwords:
+# Variables used to remove greek stopwords:
 stopwords_lower = list(map(lambda x: x.lower(), stopwords.words('greek')))
 STOPWORDS_GREEK = set(stopwords_lower)
 
+# Variable used to remove final 'ς' character:
+CHAR_TO_REMOVE = 'ς'
+
 
 def remove_punctuation(text):
-    """Custom function to remove the punctuation"""
+    """Custom function to remove the punctuation. Returns a string."""
     PUNCTUATION_TO_REMOVE = '–«!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~»●·’“”'
     return text.translate(str.maketrans('', '', PUNCTUATION_TO_REMOVE))
 
@@ -48,33 +51,34 @@ def remove_punctuation(text):
 def tokenize_regex(text):
     """The following expression matches tokens consisting of at least one letter (\p{L}), 
     preceded and followed by an arbitrary sequence of alphanumeric characters 
-    (\w includes digits, letters, and underscore) and hyphens (-)"""
+    (\w includes digits, letters, and underscore) and hyphens (-). Returns a string."""
     return re.findall(r'[\w-]*\p{L}[\w-]*', text)
 
 
 def tokenize(text):
-    """Use spacy's tokenizer"""
+    """Use spacy's tokenizer. Returns a string."""
     doc = nlp.tokenizer(' '.join(text))
-    return [token.text for token in doc]
+    return ' .'.join([token.text for token in doc])
 
 
 def drop_single_letter_words(text):
-    return [w for w in text if len(w) > 1]
+    return ' '.join([w for w in text if len(w) > 1])
 
 
 def drop_numbers(text):
+    """Custom function to remove numbers. Returns a string."""
     text_wo_numbers = re.sub(r'[0-9]+', '', text)
     return text_wo_numbers
 
 
 def lemmatize(text):
-    """Custom function to lemmatize text"""
+    """Custom function to lemmatize text. Returns a list with lemmas."""
     doc = nlp(' '.join(text))
     return [token.lemma_ for token in doc]
 
 
 def process(text, pipeline):
-    """Custom function to process a pipeline on text"""
+    """Custom function to process a pipeline on text."""
     tokens = text
     for transform in pipeline:
         tokens = transform(tokens)
@@ -82,7 +86,7 @@ def process(text, pipeline):
 
 
 def import_additional_greek_stopwords(STOPWORDS_GREEK):
-    """Helper function used add more stopwords to NLTK stopwords list"""
+    """Helper function used add more stopwords to NLTK stopwords list."""
     additional_stopwords = open('data/additional_stopwords.txt', 'r')
     for line in additional_stopwords:
         words = line.strip()
@@ -91,8 +95,8 @@ def import_additional_greek_stopwords(STOPWORDS_GREEK):
 
 
 def remove_stopwords(text):
-    """Custom function to remove the stopwords"""
-    return " ".join([word for word in str(text).split() if not word in STOPWORDS_GREEK])
+    """Custom function to remove the stopwords. Returns a string"""
+    return ' '.join([word for word in str(text).split() if not word in STOPWORDS_GREEK])
 
 def remove_intonation(text):
     """Custom function to remove word-intonation"""
@@ -110,6 +114,9 @@ def remove_intonation(text):
 
     return text
 
+def remove_final_s(text):
+    """Helper function which removes final s characters. Returns a string."""
+    return re.sub('ς', '', text)
 
 ################### NLP ###################
 
