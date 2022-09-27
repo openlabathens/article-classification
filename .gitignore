@@ -132,4 +132,6 @@ dmypy.json
 .DS_Store
 .vscode/
 
+# Test files
 reqs/article_classification.py
+article_classification.ipynb
