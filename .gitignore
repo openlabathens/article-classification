@@ -134,4 +134,3 @@ dmypy.json
 
 # Test files
 reqs/article_classification.py
-article_classification.ipynb
